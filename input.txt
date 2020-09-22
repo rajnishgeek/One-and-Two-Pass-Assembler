@@ -1,0 +1,17 @@
+-	START    1000
+BEGIN	MVI 	C,09H        
+BACK   MOV 	A,M    
+-	INX 	H           
+-	CMP 	M      
+-	JC 	SKIP    
+-	JZ 	SKIP  
+-	MOV 	D,M
+-	MOV 	M,A
+-	DCX 	H
+-	MOV 	M,D 
+-	INX 	H   
+SKIP	DCR 	C   
+-	JNZ 	BACK
+-	DCR 	B
+-	JNZ 	BEGIN 
+-	HLT	-
