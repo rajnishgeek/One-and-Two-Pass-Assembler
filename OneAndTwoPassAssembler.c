@@ -8,7 +8,7 @@
 void onePassAssembler()
 {
 	FILE *read, *write;
-	int current_address, starting_address;
+	int starting_address, current_address;
 	char opcode[20], label[20], operand[20];
 
 	read = fopen("InputFile.txt", "r");
@@ -48,10 +48,12 @@ void onePassAssembler()
 	fclose(write);
 }
 
+
+
 //This is two pass assembler function
 void twoPassAssembler()
 {
-	FILE *input_read, *output, *symbol_table_read;
+	FILE *input_read, *opcode_table_read, *symbol_table_read;
 
 	input_read = fopen("InputFile.txt", "r");
 	int current_address, starting_address;
@@ -76,12 +78,13 @@ void twoPassAssembler()
 			break;
 		}
 
-		output = fopen("OutputTableFile.txt", "r");
+		opcode_table_read = fopen("OpcodeTableFile.txt", "r");
 		symbol_table_read = fopen("SymbolTableFile.txt", "r");
 
 		bool flag = false;
 		char machine_code[20], temp_label[20];
 		char temp_address[20];
+
 		while (!feof(symbol_table_read))
 		{
 
@@ -102,16 +105,17 @@ void twoPassAssembler()
 
 		fclose(symbol_table_read);
 
-		while (!feof(output))
+		while (!feof(opcode_table_read))
 		{
 			char temp_opcode[20], temp_machine_code[20], temp_operand[20];
-			fscanf(output, "%s %s %s", temp_opcode, temp_operand, temp_machine_code);
-			if (strcmp(opcode, temp_opcode) == 0 && (flag == true || strcmp(operand, temp_operand) == 0) )
+			fscanf(opcode_table_read, "%s %s %s", temp_opcode, temp_operand, temp_machine_code);
+			if ((strcmp(opcode, temp_opcode) == 0) && (flag == true || (strcmp(operand, temp_operand) == 0)) )
 			{
 				strcpy(machine_code, temp_machine_code);
 				break;
 			}
 		}
+
 		printf("%d \t %s ", current_address, machine_code);
 		if (flag == true)
 		{
@@ -124,7 +128,7 @@ void twoPassAssembler()
 			current_address += 1;
 
 		}
-		fclose(output);
+		fclose(opcode_table_read);
 	}
 
 	fclose(input_read);
